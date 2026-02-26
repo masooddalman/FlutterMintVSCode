@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FlutterForge Editor</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--vscode-font-family);
+      background-color: var(--vscode-editor-background);
+      color: var(--vscode-editor-foreground);
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .container {
+      text-align: center;
+      padding: 40px;
+    }
+
+    .logo {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--vscode-foreground);
+    }
+
+    p {
+      font-size: 14px;
+      color: var(--vscode-descriptionForeground);
+      margin-bottom: 24px;
+    }
+
+    .status {
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 4px;
+      font-size: 12px;
+      background-color: var(--vscode-badge-background);
+      color: var(--vscode-badge-foreground);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">&#9881;</div>
+    <h1>FlutterForge Visual Editor</h1>
+    <p>Screen flow diagram and widget composer will appear here.</p>
+    <span class="status">Coming in Increment 2</span>
+  </div>
+
+  <script>
+    const vscode = acquireVsCodeApi();
+    vscode.postMessage({ command: 'ready' });
+  </script>
+</body>
+</html>

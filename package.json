@@ -1,0 +1,75 @@
+{
+  "name": "flutterforge",
+  "displayName": "FlutterForge",
+  "description": "Visual architecture editor for Flutter projects with MVVM clean architecture",
+  "version": "0.0.1",
+  "publisher": "flutterforge",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "workspaceContains:.flutterforge.yaml"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "flutterforge.createProject",
+        "title": "FlutterForge: Create Project"
+      },
+      {
+        "command": "flutterforge.addScreen",
+        "title": "FlutterForge: Add Screen"
+      },
+      {
+        "command": "flutterforge.openEditor",
+        "title": "FlutterForge: Open Visual Editor"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "flutterforge",
+          "title": "FlutterForge",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "flutterforge": [
+        {
+          "id": "flutterforge.projectView",
+          "name": "Project"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "FlutterForge",
+      "properties": {
+        "flutterforge.cliPath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to the FlutterForge CLI project (e.g. E:\\flutterProject\\FlutterForge)"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "@vscode/vsce": "^3.0.0",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "yaml": "^2.3.0"
+  }
+}
