@@ -1,25 +1,11 @@
 import * as vscode from 'vscode';
 import { ForgeRunner } from '../cli/forgeRunner';
-import { SidebarProvider } from '../views/sidebarProvider';
-
-const AVAILABLE_MODULES = [
-  { label: 'logging', description: 'Logging Service', picked: true },
-  { label: 'locator', description: 'Dependency Injection (GetIt)', picked: true },
-  { label: 'theming', description: 'Theme Management', picked: true },
-  { label: 'routing', description: 'Routing (GoRouter)', picked: true },
-  { label: 'api', description: 'API Requests & Interceptors (Dio)', picked: false },
-  { label: 'ai', description: 'AI Service', picked: false },
-  { label: 'localization', description: 'Multi-language Support', picked: false },
-  { label: 'startup', description: 'Startup Service', picked: false },
-  { label: 'toast', description: 'Toast Notifications', picked: false },
-  { label: 'testing', description: 'Testing Setup', picked: false },
-  { label: 'cicd', description: 'CI/CD Pipeline', picked: false },
-  { label: 'flavors', description: 'Build Flavors', picked: false },
-];
+import { SidebarWebviewProvider } from '../views/sidebarWebviewProvider';
+import { AVAILABLE_MODULES } from '../utils/constants';
 
 export function registerCreateProjectCommand(
   context: vscode.ExtensionContext,
-  sidebar: SidebarProvider
+  sidebar: SidebarWebviewProvider
 ) {
   const command = vscode.commands.registerCommand('flutterforge.createProject', async () => {
     try {

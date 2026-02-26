@@ -1,11 +1,11 @@
 import * as vscode from 'vscode';
 import { ForgeRunner } from '../cli/forgeRunner';
-import { SidebarProvider } from '../views/sidebarProvider';
+import { SidebarWebviewProvider } from '../views/sidebarWebviewProvider';
 import { getWorkspacePath } from '../utils/config';
 
 export function registerAddScreenCommand(
   context: vscode.ExtensionContext,
-  sidebar: SidebarProvider
+  sidebar: SidebarWebviewProvider
 ) {
   const command = vscode.commands.registerCommand('flutterforge.addScreen', async () => {
     try {

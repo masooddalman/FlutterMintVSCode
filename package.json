@@ -27,6 +27,42 @@
       {
         "command": "flutterforge.openEditor",
         "title": "FlutterForge: Open Visual Editor"
+      },
+      {
+        "command": "flutterforge.status",
+        "title": "FlutterForge: Show Status"
+      },
+      {
+        "command": "flutterforge.addModule",
+        "title": "FlutterForge: Add Module"
+      },
+      {
+        "command": "flutterforge.removeModule",
+        "title": "FlutterForge: Remove Module"
+      },
+      {
+        "command": "flutterforge.configModule",
+        "title": "FlutterForge: Configure Module"
+      },
+      {
+        "command": "flutterforge.run",
+        "title": "FlutterForge: Run"
+      },
+      {
+        "command": "flutterforge.build",
+        "title": "FlutterForge: Build"
+      },
+      {
+        "command": "flutterforge.addPlatform",
+        "title": "FlutterForge: Add Platform"
+      },
+      {
+        "command": "flutterforge.removePlatform",
+        "title": "FlutterForge: Remove Platform"
+      },
+      {
+        "command": "flutterforge.toggleHttp",
+        "title": "FlutterForge: Toggle HTTP"
       }
     ],
     "viewsContainers": {
@@ -41,8 +77,9 @@
     "views": {
       "flutterforge": [
         {
-          "id": "flutterforge.projectView",
-          "name": "Project"
+          "id": "flutterforge.sidebarView",
+          "type": "webview",
+          "name": "FlutterForge"
         }
       ]
     },
@@ -51,7 +88,7 @@
       "properties": {
         "flutterforge.cliPath": {
           "type": "string",
-          "default": "",
+          "default": "E:\\flutterProject\\FlutterForge",
           "description": "Path to the FlutterForge CLI project (e.g. E:\\flutterProject\\FlutterForge)"
         }
       }
