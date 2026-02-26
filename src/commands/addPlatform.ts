@@ -3,6 +3,8 @@ import { getWorkspacePath, loadForgeConfig } from '../utils/config';
 import { AVAILABLE_PLATFORMS } from '../utils/constants';
 import { runInTerminal } from '../cli/terminalRunner';
 import { SidebarWebviewProvider } from '../views/sidebarWebviewProvider';
+import { WizardPanel } from '../views/wizardPanel';
+import { WizardConfig } from '../views/wizardFields';
 
 export function registerAddPlatformCommand(
   context: vscode.ExtensionContext,
@@ -27,17 +29,31 @@ export function registerAddPlatformCommand(
       return;
     }
 
-    const selected = await vscode.window.showQuickPick(available, {
-      canPickMany: true,
-      placeHolder: 'Select platforms to add',
-    });
+    const wizardConfig: WizardConfig = {
+      id: 'flutterforge.wizard.addPlatform',
+      title: 'Add Platform',
+      fields: [
+        {
+          type: 'checkbox-grid',
+          id: 'platforms',
+          label: 'Select Platforms to Add',
+          required: true,
+          columns: 3,
+          options: available.map(p => ({
+            value: p.label,
+            label: p.label,
+            description: p.description,
+            checked: false,
+          })),
+        },
+      ],
+      submitLabel: 'Add Platforms',
+    };
 
-    if (!selected || selected.length === 0) {
-      return;
-    }
+    const result = await WizardPanel.show<{ platforms: string[] }>(context, wizardConfig);
+    if (!result || result.platforms.length === 0) { return; }
 
-    const platformIds = selected.map(s => s.label);
-    runInTerminal('Add Platform', ['platform', 'add', ...platformIds], projectPath);
+    runInTerminal('Add Platform', ['platform', 'add', ...result.platforms], projectPath);
     sidebar.refresh();
   });
 

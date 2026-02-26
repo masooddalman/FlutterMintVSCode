@@ -1,8 +1,8 @@
 export const AVAILABLE_MODULES = [
   { label: 'logging', description: 'Logging Service', picked: true },
-  { label: 'locator', description: 'Dependency Injection (GetIt)', picked: true },
-  { label: 'theming', description: 'Theme Management', picked: true },
-  { label: 'routing', description: 'Routing (GoRouter)', picked: true },
+  { label: 'locator', description: 'Dependency Injection (GetIt)', picked: false },
+  { label: 'theming', description: 'Theme Management', picked: false },
+  { label: 'routing', description: 'Routing (GoRouter)', picked: false },
   { label: 'api', description: 'API Requests & Interceptors (Dio)', picked: false },
   { label: 'ai', description: 'AI Service', picked: false },
   { label: 'localization', description: 'Multi-language Support', picked: false },

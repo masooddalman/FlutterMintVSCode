@@ -1,78 +1,67 @@
 import * as vscode from 'vscode';
-import { ForgeRunner } from '../cli/forgeRunner';
 import { SidebarWebviewProvider } from '../views/sidebarWebviewProvider';
 import { getWorkspacePath } from '../utils/config';
+import { runInTerminal } from '../cli/terminalRunner';
+import { WizardPanel } from '../views/wizardPanel';
+import { WizardConfig } from '../views/wizardFields';
 
 export function registerAddScreenCommand(
   context: vscode.ExtensionContext,
   sidebar: SidebarWebviewProvider
 ) {
   const command = vscode.commands.registerCommand('flutterforge.addScreen', async () => {
-    try {
-      const projectPath = getWorkspacePath();
-      if (!projectPath) {
-        vscode.window.showErrorMessage('No workspace folder open.');
-        return;
-      }
-
-      // Step 1: Screen name
-      const screenName = await vscode.window.showInputBox({
-        prompt: 'Enter screen name (lowercase, underscores only)',
-        placeHolder: 'user_profile',
-        validateInput: (value) => {
-          if (!value) {
-            return 'Screen name is required';
-          }
-          if (!/^[a-z][a-z0-9_]*$/.test(value)) {
-            return 'Use only lowercase letters, numbers, and underscores';
-          }
-          if (value === 'home') {
-            return '"home" screen already exists as the default feature';
-          }
-          return null;
-        },
-      });
-
-      if (!screenName) {
-        return;
-      }
-
-      // Step 2: Route parameters (optional)
-      const paramsInput = await vscode.window.showInputBox({
-        prompt: 'Route parameters (optional, comma-separated name:Type)',
-        placeHolder: 'id:String, category:String',
-      });
-
-      const params = new Map<string, string>();
-      if (paramsInput) {
-        const pairs = paramsInput.split(',').map((s) => s.trim());
-        for (const pair of pairs) {
-          const [key, type] = pair.split(':').map((s) => s.trim());
-          if (key && type) {
-            params.set(key, type);
-          }
-        }
-      }
-
-      // Step 3: Run FlutterForge
-      const runner = new ForgeRunner();
-      await vscode.window.withProgress(
-        {
-          location: vscode.ProgressLocation.Notification,
-          title: `FlutterForge: Adding screen "${screenName}"...`,
-          cancellable: false,
-        },
-        async () => {
-          await runner.addScreen(screenName, params, projectPath);
-        }
-      );
-
-      vscode.window.showInformationMessage(`Screen "${screenName}" created successfully!`);
-      sidebar.refresh();
-    } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : String(error);
-      vscode.window.showErrorMessage(`FlutterForge: ${message}`);
+    const projectPath = getWorkspacePath();
+    if (!projectPath) {
+      vscode.window.showErrorMessage('No workspace folder open.');
+      return;
     }
+
+    const wizardConfig: WizardConfig = {
+      id: 'flutterforge.wizard.addScreen',
+      title: 'Add Screen',
+      fields: [
+        {
+          type: 'text',
+          id: 'screenName',
+          label: 'Screen Name',
+          placeholder: 'user_profile',
+          required: true,
+          validationRegex: '^[a-z][a-z0-9_]*$',
+          validationMessage: 'Use only lowercase letters, numbers, and underscores',
+        },
+        {
+          type: 'key-value-list',
+          id: 'params',
+          label: 'Route Parameters (optional)',
+          keyPlaceholder: 'paramName',
+          valuePlaceholder: 'String',
+        },
+      ],
+      submitLabel: 'Add Screen',
+    };
+
+    const result = await WizardPanel.show<{
+      screenName: string;
+      params: Array<{ key: string; value: string }>;
+    }>(context, wizardConfig);
+
+    if (!result) { return; }
+
+    if (result.screenName === 'home') {
+      vscode.window.showErrorMessage('"home" screen already exists as the default feature.');
+      return;
+    }
+
+    // Build CLI args: screen <name> [--param key:Type ...]
+    const args = ['screen', result.screenName];
+    for (const p of result.params) {
+      if (p.key && p.value) {
+        args.push('--param', `${p.key}:${p.value}`);
+      }
+    }
+
+    runInTerminal('Add Screen', args, projectPath);
+    sidebar.refresh();
   });
 
   context.subscriptions.push(command);

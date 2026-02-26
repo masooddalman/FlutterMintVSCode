@@ -3,6 +3,8 @@ import { getWorkspacePath, loadForgeConfig } from '../utils/config';
 import { AVAILABLE_MODULES } from '../utils/constants';
 import { runInTerminal } from '../cli/terminalRunner';
 import { SidebarWebviewProvider } from '../views/sidebarWebviewProvider';
+import { WizardPanel } from '../views/wizardPanel';
+import { WizardConfig } from '../views/wizardFields';
 
 export function registerAddModuleCommand(
   context: vscode.ExtensionContext,
@@ -27,16 +29,30 @@ export function registerAddModuleCommand(
       return;
     }
 
-    const selected = await vscode.window.showQuickPick(
-      available.map(m => ({ label: m.label, description: m.description })),
-      { placeHolder: 'Select module to add' }
-    );
+    const wizardConfig: WizardConfig = {
+      id: 'flutterforge.wizard.addModule',
+      title: 'Add Module',
+      fields: [
+        {
+          type: 'radio-grid',
+          id: 'module',
+          label: 'Select Module to Add',
+          required: true,
+          columns: 3,
+          options: available.map(m => ({
+            value: m.label,
+            label: m.label,
+            description: m.description,
+          })),
+        },
+      ],
+      submitLabel: 'Add Module',
+    };
 
-    if (!selected) {
-      return;
-    }
+    const result = await WizardPanel.show<{ module: string }>(context, wizardConfig);
+    if (!result) { return; }
 
-    runInTerminal('Add Module', ['add', selected.label], projectPath);
+    runInTerminal('Add Module', ['add', result.module], projectPath);
     sidebar.refresh();
   });
 

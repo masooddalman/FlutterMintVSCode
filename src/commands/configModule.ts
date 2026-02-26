@@ -2,6 +2,8 @@ import * as vscode from 'vscode';
 import { getWorkspacePath, loadForgeConfig } from '../utils/config';
 import { CONFIGURABLE_MODULES } from '../utils/constants';
 import { runInTerminal } from '../cli/terminalRunner';
+import { WizardPanel } from '../views/wizardPanel';
+import { WizardConfig } from '../views/wizardFields';
 
 export function registerConfigModuleCommand(context: vscode.ExtensionContext) {
   const command = vscode.commands.registerCommand('flutterforge.configModule', async () => {
@@ -23,15 +25,30 @@ export function registerConfigModuleCommand(context: vscode.ExtensionContext) {
       return;
     }
 
-    const selected = await vscode.window.showQuickPick(configurable, {
-      placeHolder: 'Select module to configure',
-    });
+    const wizardConfig: WizardConfig = {
+      id: 'flutterforge.wizard.configModule',
+      title: 'Configure Module',
+      fields: [
+        {
+          type: 'radio-grid',
+          id: 'module',
+          label: 'Select Module to Configure',
+          required: true,
+          columns: 2,
+          options: configurable.map(m => ({
+            value: m.label,
+            label: m.label,
+            description: m.description,
+          })),
+        },
+      ],
+      submitLabel: 'Configure',
+    };
 
-    if (!selected) {
-      return;
-    }
+    const result = await WizardPanel.show<{ module: string }>(context, wizardConfig);
+    if (!result) { return; }
 
-    runInTerminal('Configure', ['config', selected.label], projectPath);
+    runInTerminal('Configure', ['config', result.module], projectPath);
   });
 
   context.subscriptions.push(command);
