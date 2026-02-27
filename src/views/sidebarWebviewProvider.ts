@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { getWorkspacePath, loadForgeConfig, getScreenNames } from '../utils/config';
+import { CONFIGURABLE_MODULES } from '../utils/constants';
 
 export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = 'flutterforge.sidebarView';
@@ -41,11 +42,20 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
     return loadForgeConfig(workspacePath) !== null;
   }
 
+  private _hasConfigurableModule(): boolean {
+    const workspacePath = getWorkspacePath();
+    if (!workspacePath) { return false; }
+    const config = loadForgeConfig(workspacePath);
+    if (!config) { return false; }
+    return CONFIGURABLE_MODULES.some(m => config.modules.includes(m.label));
+  }
+
   private _getHtmlContent(): string {
     const nonce = this._getNonce();
     const projectInfoHtml = this._buildProjectInfoHtml();
     const hasProject = this._hasProject();
     const d = hasProject ? '' : ' disabled';
+    const dc = hasProject && this._hasConfigurableModule() ? '' : ' disabled';
 
     return `<!DOCTYPE html>
 <html lang="en">
@@ -194,7 +204,7 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
       </button>
     </div>
     <div class="btn-grid single" style="margin-top:4px;">
-      <button class="menu-btn" data-cmd="flutterforge.configModule"${d}>
+      <button class="menu-btn" data-cmd="flutterforge.configModule"${dc}>
         <span class="icon">&#9881;</span> Configure
       </button>
     </div>
