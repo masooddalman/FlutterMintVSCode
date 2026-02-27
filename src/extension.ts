@@ -32,7 +32,7 @@ export function activate(context: vscode.ExtensionContext) {
   registerStatusCommand(context);
   registerAddModuleCommand(context, sidebarProvider);
   registerRemoveModuleCommand(context, sidebarProvider);
-  registerConfigModuleCommand(context);
+  registerConfigModuleCommand(context, sidebarProvider);
   registerRunCommand(context);
   registerBuildCommand(context);
   registerAddPlatformCommand(context, sidebarProvider);
