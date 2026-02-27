@@ -501,13 +501,13 @@ function renderField(field: WizardField): string {
     case 'checkbox-grid': {
       const cols = field.columns || 3;
       const cards = field.options.map(opt => `
-    <label class="card-option${opt.checked ? ' selected' : ''}">
+    <div class="card-option${opt.checked ? ' selected' : ''}">
       <input type="checkbox" name="${field.id}" value="${escapeAttr(opt.value)}"${opt.checked ? ' checked' : ''}>
       <div class="card-content">
         <span class="card-label">${escapeHtml(opt.label)}</span>
         <span class="card-desc">${escapeHtml(opt.description)}</span>
       </div>
-    </label>`).join('');
+    </div>`).join('');
 
       return `<div class="field" data-type="checkbox-grid" data-id="${field.id}" data-required="${!!field.required}">
   <label class="field-label">${escapeHtml(field.label)}${reqStar}</label>
@@ -521,13 +521,13 @@ function renderField(field: WizardField): string {
     case 'radio-grid': {
       const cols = field.columns || 3;
       const cards = field.options.map(opt => `
-    <label class="card-option">
-      <input type="radio" name="${field.id}" value="${escapeAttr(opt.value)}">
+    <div class="card-option${opt.checked ? ' selected' : ''}">
+      <input type="radio" name="${field.id}" value="${escapeAttr(opt.value)}"${opt.checked ? ' checked' : ''}>
       <div class="card-content">
         <span class="card-label">${escapeHtml(opt.label)}</span>
         <span class="card-desc">${escapeHtml(opt.description)}</span>
       </div>
-    </label>`).join('');
+    </div>`).join('');
 
       return `<div class="field" data-type="radio-grid" data-id="${field.id}" data-required="${!!field.required}">
   <label class="field-label">${escapeHtml(field.label)}${reqStar}</label>

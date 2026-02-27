@@ -36,6 +36,7 @@ export interface RadioGridField {
     value: string;
     label: string;
     description: string;
+    checked?: boolean;
   }>;
 }
 
