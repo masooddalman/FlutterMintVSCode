@@ -26,3 +26,17 @@ export const CONFIGURABLE_MODULES = [
   { label: 'cicd', description: 'CI/CD Pipeline (GitHub Actions)' },
   { label: 'flavors', description: 'App Environments / Flavors' },
 ];
+
+/** module → modules it depends on (auto-added when adding this module) */
+export const MODULE_DEPENDENCIES: Record<string, string[]> = {
+  ai: ['api'],
+  theming: ['mvvm'],
+  testing: ['mvvm'],
+  startup: ['mvvm'],
+};
+
+/** module → modules that depend on it (auto-removed when removing this module) */
+export const MODULE_DEPENDENTS: Record<string, string[]> = {
+  api: ['ai'],
+  mvvm: ['theming', 'testing', 'startup'],
+};

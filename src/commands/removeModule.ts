@@ -1,10 +1,9 @@
 import * as vscode from 'vscode';
 import { getWorkspacePath, loadForgeConfig } from '../utils/config';
-import { AVAILABLE_MODULES } from '../utils/constants';
-import { runInTerminal } from '../cli/terminalRunner';
+import { AVAILABLE_MODULES, MODULE_DEPENDENTS } from '../utils/constants';
 import { SidebarWebviewProvider } from '../views/sidebarWebviewProvider';
-import { WizardPanel } from '../views/wizardPanel';
-import { WizardConfig } from '../views/wizardFields';
+import { RemoveModulePanel } from '../views/removeModulePanel';
+import { RemoveModuleOption } from '../views/removeModuleHtml';
 
 const DEFAULT_MODULES = ['mvvm', 'logging'];
 
@@ -31,34 +30,19 @@ export function registerRemoveModuleCommand(
       return;
     }
 
-    const wizardConfig: WizardConfig = {
-      id: 'flutterforge.wizard.removeModule',
-      title: 'Remove Module',
-      fields: [
-        {
-          type: 'radio-grid',
-          id: 'module',
-          label: 'Select Module to Remove',
-          required: true,
-          columns: 3,
-          options: removable.map(m => {
-            const info = AVAILABLE_MODULES.find(am => am.label === m);
-            return {
-              value: m,
-              label: m,
-              description: info?.description || '',
-            };
-          }),
-        },
-      ],
-      submitLabel: 'Remove Module',
-    };
+    const modules: RemoveModuleOption[] = removable.map(m => {
+      const info = AVAILABLE_MODULES.find(am => am.label === m);
+      const dependents = (MODULE_DEPENDENTS[m] || [])
+        .filter(d => config.modules.includes(d));
+      return {
+        value: m,
+        label: m,
+        description: info?.description || '',
+        depNote: dependents.length > 0 ? `Also removes: ${dependents.join(', ')}` : undefined,
+      };
+    });
 
-    const result = await WizardPanel.show<{ module: string }>(context, wizardConfig);
-    if (!result) { return; }
-
-    runInTerminal('Remove Module', ['remove', result.module], projectPath);
-    sidebar.refresh();
+    RemoveModulePanel.show(context, sidebar, projectPath, modules);
   });
 
   context.subscriptions.push(command);
