@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { getWorkspacePath } from '../utils/config';
-import { runInTerminal } from '../cli/terminalRunner';
+import { StatusPanel } from '../views/statusPanel';
 
 export function registerStatusCommand(context: vscode.ExtensionContext) {
   const command = vscode.commands.registerCommand('flutterforge.status', () => {
@@ -10,7 +10,7 @@ export function registerStatusCommand(context: vscode.ExtensionContext) {
       return;
     }
 
-    runInTerminal('Status', ['status'], projectPath);
+    StatusPanel.show(projectPath);
   });
 
   context.subscriptions.push(command);
