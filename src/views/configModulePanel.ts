@@ -14,6 +14,11 @@ interface CicdConfig {
   steps: number[];
   branches: string;
   platforms: number[];
+  firebaseGroups: string;
+  googlePlayPackage: string;
+  googlePlayTrack: number;
+  testflightBundleId: string;
+  publishMode: number;
 }
 
 export class ConfigModulePanel {
@@ -138,18 +143,52 @@ export class ConfigModulePanel {
         this.sendProgress('Configuring CI/CD...');
 
         const answers: string[] = [];
-        answers.push(cicdConfig.steps.join(','));
+        const steps = cicdConfig.steps;
+        const platforms = cicdConfig.platforms || [1];
+
+        answers.push(steps.join(','));
         answers.push(cicdConfig.branches || '');
 
-        const platformStr = (cicdConfig.platforms || [1]).join(',');
-        answers.push(platformStr);
-
-        if (cicdConfig.branches) {
-          const extraBranches = cicdConfig.branches.split(',').map(b => b.trim()).filter(b => b);
-          for (const _ of extraBranches) {
-            answers.push(platformStr);
+        // Platforms per branch (only if step 5 selected)
+        if (steps.includes(5)) {
+          const platformStr = platforms.join(',');
+          answers.push(platformStr);
+          if (cicdConfig.branches) {
+            const extraBranches = cicdConfig.branches.split(',').map(b => b.trim()).filter(b => b);
+            for (const _ of extraBranches) {
+              answers.push(platformStr);
+            }
           }
         }
+
+        const hasApkOrAab = platforms.includes(1) || platforms.includes(2);
+        const hasAab = platforms.includes(2);
+        const hasIos = platforms.includes(4);
+
+        // Firebase tester groups (step 6 + APK/AAB)
+        if (steps.includes(6) && steps.includes(5) && hasApkOrAab) {
+          answers.push(cicdConfig.firebaseGroups || 'testers');
+        }
+
+        // Google Play package + track (step 7 + AAB)
+        if (steps.includes(7) && steps.includes(5) && hasAab) {
+          answers.push(cicdConfig.googlePlayPackage || '');
+          answers.push(String(cicdConfig.googlePlayTrack || 1));
+        }
+
+        // TestFlight bundle ID (step 8 + iOS)
+        if (steps.includes(8) && steps.includes(5) && hasIos) {
+          answers.push(cicdConfig.testflightBundleId || '');
+        }
+
+        // Publish mode (when Firebase or Google Play is active)
+        if ((steps.includes(6) && steps.includes(5) && hasApkOrAab) ||
+            (steps.includes(7) && steps.includes(5) && hasAab)) {
+          answers.push(String(cicdConfig.publishMode || 1));
+        }
+
+        // Confirm
+        answers.push('y');
 
         this.runCliProcess(['config', 'cicd'], answers, () => {
           this.sendComplete();

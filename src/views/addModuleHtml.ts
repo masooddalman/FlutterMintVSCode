@@ -401,7 +401,7 @@ export function generateAddModuleHtml(nonce: string, modules: AddModuleOption[])
         <div class="field-hint">Comma-separated. "main" is always included.</div>
         <input type="text" class="text-input" id="cicdBranches" placeholder="develop, staging">
       </div>
-      <div class="field">
+      <div class="field" id="platformsSection" style="display:none;">
         <label class="field-label">Build Platforms</label>
         <div class="field-hint">Platforms to build for each branch</div>
         <div class="cicd-grid">
@@ -421,6 +421,39 @@ export function generateAddModuleHtml(nonce: string, modules: AddModuleOption[])
             <input type="checkbox" name="cicdPlatform" value="4">
             <div class="card-body"><span class="card-title">iOS</span><span class="card-desc">iOS build</span></div>
           </div>
+        </div>
+      </div>
+      <div class="field" id="firebaseSection" style="display:none;">
+        <label class="field-label" for="firebaseGroups">Firebase Tester Groups</label>
+        <div class="field-hint">Comma-separated group names for Firebase App Distribution</div>
+        <input type="text" class="text-input" id="firebaseGroups" value="testers" placeholder="testers">
+      </div>
+      <div id="googlePlaySection" style="display:none;">
+        <div class="field">
+          <label class="field-label" for="googlePlayPackage">Package Name</label>
+          <div class="field-hint">Android package name for Google Play Store</div>
+          <input type="text" class="text-input" id="googlePlayPackage" placeholder="com.example.myapp">
+        </div>
+        <div class="field">
+          <label class="field-label">Release Track</label>
+          <div class="default-env-radios">
+            <label><input type="radio" name="googlePlayTrack" value="1" checked> Internal</label>
+            <label><input type="radio" name="googlePlayTrack" value="2"> Closed (Alpha)</label>
+            <label><input type="radio" name="googlePlayTrack" value="3"> Open (Beta)</label>
+            <label><input type="radio" name="googlePlayTrack" value="4"> Production</label>
+          </div>
+        </div>
+      </div>
+      <div class="field" id="testflightSection" style="display:none;">
+        <label class="field-label" for="testflightBundleId">Bundle ID</label>
+        <div class="field-hint">iOS bundle identifier for TestFlight</div>
+        <input type="text" class="text-input" id="testflightBundleId" placeholder="com.example.myapp">
+      </div>
+      <div class="field" id="publishModeSection" style="display:none;">
+        <label class="field-label">Publish Mode</label>
+        <div class="default-env-radios">
+          <label><input type="radio" name="publishMode" value="1" checked> Upload only</label>
+          <label><input type="radio" name="publishMode" value="2"> Auto-publish</label>
         </div>
       </div>
       <div class="actions">
@@ -659,12 +692,34 @@ export function generateAddModuleHtml(nonce: string, modules: AddModuleOption[])
         if (e.target === cb) return;
         cb.checked = !cb.checked;
         card.classList.toggle('selected', cb.checked);
+        updateConditionalSections();
       });
       cb.addEventListener('change', () => {
         card.classList.toggle('selected', cb.checked);
+        updateConditionalSections();
       });
       if (cb.checked) card.classList.add('selected');
     });
+
+    function updateConditionalSections() {
+      const step5 = document.querySelector('[data-step="5"] input').checked;
+      const step6 = document.querySelector('[data-step="6"] input').checked;
+      const step7 = document.querySelector('[data-step="7"] input').checked;
+      const step8 = document.querySelector('[data-step="8"] input').checked;
+      document.getElementById('platformsSection').style.display = step5 ? '' : 'none';
+      const plat1 = document.querySelector('[data-platform="1"] input').checked;
+      const plat2 = document.querySelector('[data-platform="2"] input').checked;
+      const plat4 = document.querySelector('[data-platform="4"] input').checked;
+      document.getElementById('firebaseSection').style.display =
+        (step5 && step6 && (plat1 || plat2)) ? '' : 'none';
+      document.getElementById('googlePlaySection').style.display =
+        (step5 && step7 && plat2) ? '' : 'none';
+      document.getElementById('testflightSection').style.display =
+        (step5 && step8 && plat4) ? '' : 'none';
+      document.getElementById('publishModeSection').style.display =
+        ((step5 && step6 && (plat1 || plat2)) || (step5 && step7 && plat2)) ? '' : 'none';
+    }
+    updateConditionalSections();
 
     function collectCicdConfig() {
       const steps = Array.from(document.querySelectorAll('.cicd-option[data-step] input:checked'))
@@ -672,7 +727,23 @@ export function generateAddModuleHtml(nonce: string, modules: AddModuleOption[])
       const branches = document.getElementById('cicdBranches').value.trim();
       const platforms = Array.from(document.querySelectorAll('[data-platform] input:checked'))
         .map(cb => parseInt(cb.value, 10));
-      return { steps: steps, branches: branches, platforms: platforms.length > 0 ? platforms : [1] };
+      const firebaseGroups = document.getElementById('firebaseGroups').value.trim() || 'testers';
+      const googlePlayPackage = document.getElementById('googlePlayPackage').value.trim();
+      const trackRadio = document.querySelector('input[name="googlePlayTrack"]:checked');
+      const googlePlayTrack = trackRadio ? parseInt(trackRadio.value, 10) : 1;
+      const testflightBundleId = document.getElementById('testflightBundleId').value.trim();
+      const publishRadio = document.querySelector('input[name="publishMode"]:checked');
+      const publishMode = publishRadio ? parseInt(publishRadio.value, 10) : 1;
+      return {
+        steps: steps,
+        branches: branches,
+        platforms: platforms.length > 0 ? platforms : [1],
+        firebaseGroups: firebaseGroups,
+        googlePlayPackage: googlePlayPackage,
+        googlePlayTrack: googlePlayTrack,
+        testflightBundleId: testflightBundleId,
+        publishMode: publishMode,
+      };
     }
 
     document.getElementById('cicdBackBtn').addEventListener('click', () => goToStep('select'));
