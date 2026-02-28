@@ -6,7 +6,7 @@ export function registerCreateProjectCommand(
   context: vscode.ExtensionContext,
   sidebar: SidebarWebviewProvider
 ) {
-  const command = vscode.commands.registerCommand('flutterforge.createProject', () => {
+  const command = vscode.commands.registerCommand('fluttermint.createProject', () => {
     CreateProjectPanel.show(context, sidebar);
   });
 

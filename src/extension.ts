@@ -14,7 +14,7 @@ import { registerRemovePlatformCommand } from './commands/removePlatform';
 import { registerToggleHttpCommand } from './commands/toggleHttp';
 
 export function activate(context: vscode.ExtensionContext) {
-  console.log('FlutterForge extension activated');
+  console.log('FlutterMint extension activated');
 
   // Register webview sidebar
   const sidebarProvider = new SidebarWebviewProvider(context.extensionUri);
@@ -39,8 +39,8 @@ export function activate(context: vscode.ExtensionContext) {
   registerRemovePlatformCommand(context, sidebarProvider);
   registerToggleHttpCommand(context);
 
-  // Watch for .flutterforge.yaml changes to refresh sidebar
-  const watcher = vscode.workspace.createFileSystemWatcher('**/.flutterforge.yaml');
+  // Watch for .fluttermint.yaml changes to refresh sidebar
+  const watcher = vscode.workspace.createFileSystemWatcher('**/.fluttermint.yaml');
   watcher.onDidChange(() => sidebarProvider.refresh());
   watcher.onDidCreate(() => sidebarProvider.refresh());
   watcher.onDidDelete(() => sidebarProvider.refresh());

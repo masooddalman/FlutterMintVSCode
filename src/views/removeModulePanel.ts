@@ -18,7 +18,7 @@ export class RemoveModulePanel {
     const nonce = this.getNonce();
 
     this.panel = vscode.window.createWebviewPanel(
-      'flutterforge.removeModule',
+      'fluttermint.removeModule',
       'Remove Module',
       vscode.ViewColumn.One,
       {
@@ -131,12 +131,12 @@ export class RemoveModulePanel {
   }
 
   private getEntryPoint(): string {
-    const config = vscode.workspace.getConfiguration('flutterforge');
+    const config = vscode.workspace.getConfiguration('fluttermint');
     const cliPath = config.get<string>('cliPath', '');
     if (!cliPath) {
-      throw new Error('FlutterForge CLI path not configured. Set "flutterforge.cliPath" in VS Code settings.');
+      throw new Error('FlutterMint CLI path not configured. Set "fluttermint.cliPath" in VS Code settings.');
     }
-    return path.join(cliPath, 'bin', 'flutterforge.dart');
+    return path.join(cliPath, 'bin', 'fluttermint.dart');
   }
 
   private getNonce(): string {

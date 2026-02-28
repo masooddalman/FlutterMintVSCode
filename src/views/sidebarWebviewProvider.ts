@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
-import { getWorkspacePath, loadForgeConfig, getScreenNames } from '../utils/config';
+import { getWorkspacePath, loadMintConfig, getScreenNames } from '../utils/config';
 import { CONFIGURABLE_MODULES } from '../utils/constants';
 
 export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
-  public static readonly viewType = 'flutterforge.sidebarView';
+  public static readonly viewType = 'fluttermint.sidebarView';
 
   private _view?: vscode.WebviewView;
 
@@ -39,13 +39,13 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
   private _hasProject(): boolean {
     const workspacePath = getWorkspacePath();
     if (!workspacePath) { return false; }
-    return loadForgeConfig(workspacePath) !== null;
+    return loadMintConfig(workspacePath) !== null;
   }
 
   private _hasConfigurableModule(): boolean {
     const workspacePath = getWorkspacePath();
     if (!workspacePath) { return false; }
-    const config = loadForgeConfig(workspacePath);
+    const config = loadMintConfig(workspacePath);
     if (!config) { return false; }
     return CONFIGURABLE_MODULES.some(m => config.modules.includes(m.label));
   }
@@ -175,10 +175,10 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
   <div class="section">
     <div class="section-header">Project</div>
     <div class="btn-grid">
-      <button class="menu-btn primary" data-cmd="flutterforge.createProject">
+      <button class="menu-btn primary" data-cmd="fluttermint.createProject">
         <span class="icon">+</span> Create
       </button>
-      <button class="menu-btn" data-cmd="flutterforge.status"${d}>
+      <button class="menu-btn" data-cmd="fluttermint.status"${d}>
         <span class="icon">i</span> Status
       </button>
     </div>
@@ -187,7 +187,7 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
   <div class="section">
     <div class="section-header">Screens</div>
     <div class="btn-grid single">
-      <button class="menu-btn" data-cmd="flutterforge.addScreen"${d}>
+      <button class="menu-btn" data-cmd="fluttermint.addScreen"${d}>
         <span class="icon">+</span> Add Screen
       </button>
     </div>
@@ -196,15 +196,15 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
   <div class="section">
     <div class="section-header">Modules</div>
     <div class="btn-grid">
-      <button class="menu-btn" data-cmd="flutterforge.addModule"${d}>
+      <button class="menu-btn" data-cmd="fluttermint.addModule"${d}>
         <span class="icon">+</span> Add
       </button>
-      <button class="menu-btn" data-cmd="flutterforge.removeModule"${d}>
+      <button class="menu-btn" data-cmd="fluttermint.removeModule"${d}>
         <span class="icon">&minus;</span> Remove
       </button>
     </div>
     <div class="btn-grid single" style="margin-top:4px;">
-      <button class="menu-btn" data-cmd="flutterforge.configModule"${dc}>
+      <button class="menu-btn" data-cmd="fluttermint.configModule"${dc}>
         <span class="icon">&#9881;</span> Configure
       </button>
     </div>
@@ -213,10 +213,10 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
   <div class="section">
     <div class="section-header">Run &amp; Build</div>
     <div class="btn-grid">
-      <button class="menu-btn primary" data-cmd="flutterforge.run"${d}>
+      <button class="menu-btn primary" data-cmd="fluttermint.run"${d}>
         <span class="icon">&#9654;</span> Run
       </button>
-      <button class="menu-btn" data-cmd="flutterforge.build"${d}>
+      <button class="menu-btn" data-cmd="fluttermint.build"${d}>
         <span class="icon">&#9634;</span> Build
       </button>
     </div>
@@ -225,10 +225,10 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
   <div class="section">
     <div class="section-header">Platform</div>
     <div class="btn-grid">
-      <button class="menu-btn" data-cmd="flutterforge.addPlatform"${d}>
+      <button class="menu-btn" data-cmd="fluttermint.addPlatform"${d}>
         <span class="icon">+</span> Add
       </button>
-      <button class="menu-btn" data-cmd="flutterforge.removePlatform"${d}>
+      <button class="menu-btn" data-cmd="fluttermint.removePlatform"${d}>
         <span class="icon">&minus;</span> Remove
       </button>
     </div>
@@ -237,7 +237,7 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
   <div class="section">
     <div class="section-header">Network</div>
     <div class="btn-grid single">
-      <button class="menu-btn" data-cmd="flutterforge.toggleHttp"${d}>
+      <button class="menu-btn" data-cmd="fluttermint.toggleHttp"${d}>
         <span class="icon">&#9741;</span> Toggle HTTP
       </button>
     </div>
@@ -267,9 +267,9 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
       return '<div class="no-project">No workspace open</div>';
     }
 
-    const config = loadForgeConfig(workspacePath);
+    const config = loadMintConfig(workspacePath);
     if (!config) {
-      return '<div class="no-project">No FlutterForge project detected.<br>Run <strong>Create</strong> to start.</div>';
+      return '<div class="no-project">No FlutterMint project detected.<br>Run <strong>Create</strong> to start.</div>';
     }
 
     const screens = getScreenNames(workspacePath);

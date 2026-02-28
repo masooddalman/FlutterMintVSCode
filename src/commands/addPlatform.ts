@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { getWorkspacePath, loadForgeConfig } from '../utils/config';
+import { getWorkspacePath, loadMintConfig } from '../utils/config';
 import { AVAILABLE_PLATFORMS } from '../utils/constants';
 import { runInTerminal } from '../cli/terminalRunner';
 import { SidebarWebviewProvider } from '../views/sidebarWebviewProvider';
@@ -10,16 +10,16 @@ export function registerAddPlatformCommand(
   context: vscode.ExtensionContext,
   sidebar: SidebarWebviewProvider
 ) {
-  const command = vscode.commands.registerCommand('flutterforge.addPlatform', async () => {
+  const command = vscode.commands.registerCommand('fluttermint.addPlatform', async () => {
     const projectPath = getWorkspacePath();
     if (!projectPath) {
       vscode.window.showErrorMessage('No workspace folder open.');
       return;
     }
 
-    const config = loadForgeConfig(projectPath);
+    const config = loadMintConfig(projectPath);
     if (!config) {
-      vscode.window.showErrorMessage('No FlutterForge project found in this workspace.');
+      vscode.window.showErrorMessage('No FlutterMint project found in this workspace.');
       return;
     }
 
@@ -30,7 +30,7 @@ export function registerAddPlatformCommand(
     }
 
     const wizardConfig: WizardConfig = {
-      id: 'flutterforge.wizard.addPlatform',
+      id: 'fluttermint.wizard.addPlatform',
       title: 'Add Platform',
       fields: [
         {

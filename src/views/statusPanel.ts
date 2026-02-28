@@ -1,12 +1,12 @@
 import * as vscode from 'vscode';
-import { loadForgeConfig, getScreenNames } from '../utils/config';
+import { loadMintConfig, getScreenNames } from '../utils/config';
 import { AVAILABLE_MODULES, AVAILABLE_PLATFORMS, MODULE_DEPENDENCIES } from '../utils/constants';
 
 export class StatusPanel {
   static show(projectPath: string): void {
-    const config = loadForgeConfig(projectPath);
+    const config = loadMintConfig(projectPath);
     if (!config) {
-      vscode.window.showErrorMessage('No FlutterForge project found in this workspace.');
+      vscode.window.showErrorMessage('No FlutterMint project found in this workspace.');
       return;
     }
 
@@ -21,7 +21,7 @@ export class StatusPanel {
     const nonce = getNonce();
 
     const panel = vscode.window.createWebviewPanel(
-      'flutterforge.status',
+      'fluttermint.status',
       'Project Status',
       vscode.ViewColumn.One,
       { enableScripts: true },

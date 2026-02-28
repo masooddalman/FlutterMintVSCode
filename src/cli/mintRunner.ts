@@ -2,14 +2,14 @@ import * as vscode from 'vscode';
 import { execSync, spawn } from 'child_process';
 import * as path from 'path';
 
-export class ForgeRunner {
+export class MintRunner {
   private getCliPath(): string {
-    const config = vscode.workspace.getConfiguration('flutterforge');
+    const config = vscode.workspace.getConfiguration('fluttermint');
     const cliPath = config.get<string>('cliPath', '');
 
     if (!cliPath) {
       throw new Error(
-        'FlutterForge CLI path not configured. Set "flutterforge.cliPath" in VS Code settings.'
+        'FlutterMint CLI path not configured. Set "fluttermint.cliPath" in VS Code settings.'
       );
     }
 
@@ -18,7 +18,7 @@ export class ForgeRunner {
 
   private getEntryPoint(): string {
     const cliPath = this.getCliPath();
-    return path.join(cliPath, 'bin', 'flutterforge.dart');
+    return path.join(cliPath, 'bin', 'fluttermint.dart');
   }
 
   async createProject(

@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { getWorkspacePath, loadForgeConfig } from '../utils/config';
+import { getWorkspacePath, loadMintConfig } from '../utils/config';
 import { CONFIGURABLE_MODULES } from '../utils/constants';
 import { SidebarWebviewProvider } from '../views/sidebarWebviewProvider';
 import { ConfigModulePanel } from '../views/configModulePanel';
@@ -9,16 +9,16 @@ export function registerConfigModuleCommand(
   context: vscode.ExtensionContext,
   sidebar: SidebarWebviewProvider
 ) {
-  const command = vscode.commands.registerCommand('flutterforge.configModule', async () => {
+  const command = vscode.commands.registerCommand('fluttermint.configModule', async () => {
     const projectPath = getWorkspacePath();
     if (!projectPath) {
       vscode.window.showErrorMessage('No workspace folder open.');
       return;
     }
 
-    const config = loadForgeConfig(projectPath);
+    const config = loadMintConfig(projectPath);
     if (!config) {
-      vscode.window.showErrorMessage('No FlutterForge project found in this workspace.');
+      vscode.window.showErrorMessage('No FlutterMint project found in this workspace.');
       return;
     }
 

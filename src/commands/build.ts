@@ -3,7 +3,7 @@ import { getWorkspacePath } from '../utils/config';
 import { runInTerminal } from '../cli/terminalRunner';
 
 export function registerBuildCommand(context: vscode.ExtensionContext) {
-  const command = vscode.commands.registerCommand('flutterforge.build', () => {
+  const command = vscode.commands.registerCommand('fluttermint.build', () => {
     const projectPath = getWorkspacePath();
     if (!projectPath) {
       vscode.window.showErrorMessage('No workspace folder open.');

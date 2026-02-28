@@ -3,7 +3,7 @@ import * as path from 'path';
 import * as vscode from 'vscode';
 import { parse as parseYaml } from 'yaml';
 
-export interface ForgeConfig {
+export interface MintConfig {
   appName: string;
   org: string;
   modules: string[];
@@ -18,8 +18,8 @@ export function getWorkspacePath(): string | undefined {
   return folders[0].uri.fsPath;
 }
 
-export function loadForgeConfig(projectPath: string): ForgeConfig | null {
-  const configPath = path.join(projectPath, '.flutterforge.yaml');
+export function loadMintConfig(projectPath: string): MintConfig | null {
+  const configPath = path.join(projectPath, '.fluttermint.yaml');
 
   if (!fs.existsSync(configPath)) {
     return null;

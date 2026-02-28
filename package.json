@@ -1,9 +1,9 @@
 {
-  "name": "flutterforge",
-  "displayName": "FlutterForge",
+  "name": "fluttermint",
+  "displayName": "FlutterMint",
   "description": "Visual architecture editor for Flutter projects with MVVM clean architecture",
   "version": "0.0.1",
-  "publisher": "flutterforge",
+  "publisher": "fluttermint",
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -11,85 +11,85 @@
     "Other"
   ],
   "activationEvents": [
-    "workspaceContains:.flutterforge.yaml"
+    "workspaceContains:.fluttermint.yaml"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "flutterforge.createProject",
-        "title": "FlutterForge: Create Project"
+        "command": "fluttermint.createProject",
+        "title": "FlutterMint: Create Project"
       },
       {
-        "command": "flutterforge.addScreen",
-        "title": "FlutterForge: Add Screen"
+        "command": "fluttermint.addScreen",
+        "title": "FlutterMint: Add Screen"
       },
       {
-        "command": "flutterforge.openEditor",
-        "title": "FlutterForge: Open Visual Editor"
+        "command": "fluttermint.openEditor",
+        "title": "FlutterMint: Open Visual Editor"
       },
       {
-        "command": "flutterforge.status",
-        "title": "FlutterForge: Show Status"
+        "command": "fluttermint.status",
+        "title": "FlutterMint: Show Status"
       },
       {
-        "command": "flutterforge.addModule",
-        "title": "FlutterForge: Add Module"
+        "command": "fluttermint.addModule",
+        "title": "FlutterMint: Add Module"
       },
       {
-        "command": "flutterforge.removeModule",
-        "title": "FlutterForge: Remove Module"
+        "command": "fluttermint.removeModule",
+        "title": "FlutterMint: Remove Module"
       },
       {
-        "command": "flutterforge.configModule",
-        "title": "FlutterForge: Configure Module"
+        "command": "fluttermint.configModule",
+        "title": "FlutterMint: Configure Module"
       },
       {
-        "command": "flutterforge.run",
-        "title": "FlutterForge: Run"
+        "command": "fluttermint.run",
+        "title": "FlutterMint: Run"
       },
       {
-        "command": "flutterforge.build",
-        "title": "FlutterForge: Build"
+        "command": "fluttermint.build",
+        "title": "FlutterMint: Build"
       },
       {
-        "command": "flutterforge.addPlatform",
-        "title": "FlutterForge: Add Platform"
+        "command": "fluttermint.addPlatform",
+        "title": "FlutterMint: Add Platform"
       },
       {
-        "command": "flutterforge.removePlatform",
-        "title": "FlutterForge: Remove Platform"
+        "command": "fluttermint.removePlatform",
+        "title": "FlutterMint: Remove Platform"
       },
       {
-        "command": "flutterforge.toggleHttp",
-        "title": "FlutterForge: Toggle HTTP"
+        "command": "fluttermint.toggleHttp",
+        "title": "FlutterMint: Toggle HTTP"
       }
     ],
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "flutterforge",
-          "title": "FlutterForge",
+          "id": "fluttermint",
+          "title": "FlutterMint",
           "icon": "media/icon.svg"
         }
       ]
     },
     "views": {
-      "flutterforge": [
+      "fluttermint": [
         {
-          "id": "flutterforge.sidebarView",
+          "id": "fluttermint.sidebarView",
           "type": "webview",
-          "name": "FlutterForge"
+          "name": "FlutterMint"
         }
       ]
     },
     "configuration": {
-      "title": "FlutterForge",
+      "title": "FlutterMint",
       "properties": {
-        "flutterforge.cliPath": {
+        "fluttermint.cliPath": {
           "type": "string",
-          "default": "E:\\flutterProject\\FlutterForge",
-          "description": "Path to the FlutterForge CLI project (e.g. E:\\flutterProject\\FlutterForge)"
+          "default": "E:\\flutterProject\\FlutterMint",
+          "description": "Path to the FlutterMint CLI project (e.g. E:\\flutterProject\\FlutterMint)"
         }
       }
     }

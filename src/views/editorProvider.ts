@@ -12,8 +12,8 @@ export class EditorProvider {
     }
 
     EditorProvider.panel = vscode.window.createWebviewPanel(
-      'flutterforgeEditor',
-      'FlutterForge Editor',
+      'fluttermintEditor',
+      'FlutterMint Editor',
       vscode.ViewColumn.One,
       {
         enableScripts: true,
@@ -40,7 +40,7 @@ export class EditorProvider {
       (message) => {
         switch (message.command) {
           case 'ready':
-            console.log('FlutterForge editor webview ready');
+            console.log('FlutterMint editor webview ready');
             break;
         }
       },

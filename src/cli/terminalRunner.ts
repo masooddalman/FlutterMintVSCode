@@ -2,16 +2,16 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 
 export function getCliEntryPoint(): string {
-  const config = vscode.workspace.getConfiguration('flutterforge');
+  const config = vscode.workspace.getConfiguration('fluttermint');
   const cliPath = config.get<string>('cliPath', '');
 
   if (!cliPath) {
     throw new Error(
-      'FlutterForge CLI path not configured. Set "flutterforge.cliPath" in VS Code settings.'
+      'FlutterMint CLI path not configured. Set "fluttermint.cliPath" in VS Code settings.'
     );
   }
 
-  return path.join(cliPath, 'bin', 'flutterforge.dart');
+  return path.join(cliPath, 'bin', 'fluttermint.dart');
 }
 
 export function runInTerminal(name: string, args: string[], cwd: string): void {
@@ -19,7 +19,7 @@ export function runInTerminal(name: string, args: string[], cwd: string): void {
   const fullArgs = ['run', entryPoint, ...args];
   const command = `dart ${fullArgs.map(a => a.includes(' ') ? `"${a}"` : a).join(' ')}`;
 
-  const terminal = vscode.window.createTerminal({ name: `FlutterForge: ${name}`, cwd });
+  const terminal = vscode.window.createTerminal({ name: `FlutterMint: ${name}`, cwd });
   terminal.sendText(command);
   terminal.show();
 }

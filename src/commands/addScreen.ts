@@ -9,7 +9,7 @@ export function registerAddScreenCommand(
   context: vscode.ExtensionContext,
   sidebar: SidebarWebviewProvider
 ) {
-  const command = vscode.commands.registerCommand('flutterforge.addScreen', async () => {
+  const command = vscode.commands.registerCommand('fluttermint.addScreen', async () => {
     const projectPath = getWorkspacePath();
     if (!projectPath) {
       vscode.window.showErrorMessage('No workspace folder open.');
@@ -17,7 +17,7 @@ export function registerAddScreenCommand(
     }
 
     const wizardConfig: WizardConfig = {
-      id: 'flutterforge.wizard.addScreen',
+      id: 'fluttermint.wizard.addScreen',
       title: 'Add Screen',
       fields: [
         {

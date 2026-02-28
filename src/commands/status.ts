@@ -3,7 +3,7 @@ import { getWorkspacePath } from '../utils/config';
 import { StatusPanel } from '../views/statusPanel';
 
 export function registerStatusCommand(context: vscode.ExtensionContext) {
-  const command = vscode.commands.registerCommand('flutterforge.status', () => {
+  const command = vscode.commands.registerCommand('fluttermint.status', () => {
     const projectPath = getWorkspacePath();
     if (!projectPath) {
       vscode.window.showErrorMessage('No workspace folder open.');
