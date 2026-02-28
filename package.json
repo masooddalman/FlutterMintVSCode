@@ -3,7 +3,13 @@
   "displayName": "FlutterMint",
   "description": "Visual architecture editor for Flutter projects with MVVM clean architecture",
   "version": "0.0.1",
-  "publisher": "fluttermint",
+  "publisher": "masoud-dalman",
+  "license": "GPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/masooddalman/FlutterMintVSCode"
+  },
+  "icon": "media/icon.png",
   "engines": {
     "vscode": "^1.85.0"
   },

@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm run compile)"
+      "Bash(npm run compile)",
+      "Bash(npx --yes sharp-cli -i \"e:/JS/flutterForgeVSCode/media/icon.svg\" -o \"e:/JS/flutterForgeVSCode/media/icon.png\" -- resize 256 256)",
+      "Bash(npx vsce package)"
     ]
   }
 }

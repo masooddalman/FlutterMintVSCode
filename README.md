@@ -95,4 +95,4 @@ The extension is a visual frontend for the FlutterMint CLI. Every action maps to
 
 ## License
 
-MIT
+GPL-3.0
