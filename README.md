@@ -1,8 +1,20 @@
 # FlutterMint VSCode
 
+![FlutterMint Banner](assets/banner.png)
+
 A VS Code extension that gives you a full visual interface for scaffolding, managing, and building Flutter projects using clean MVVM architecture.
 
 FlutterMint wraps the [FlutterMint CLI](https://pub.dev/packages/fluttermint) and replaces every terminal prompt with dedicated in-editor wizard panels, so you never have to leave VS Code.
+
+## Screenshots
+
+| Sidebar & Project Info | Add Screen | Add Module |
+|:---:|:---:|:---:|
+| ![Sidebar](assets/fluttermint1.jpg) | ![Add Screen](assets/fluttermint2.jpg) | ![Add Module](assets/fluttermint3.jpg) |
+
+| Remove Module | Add Platform | Remove Platform |
+|:---:|:---:|:---:|
+| ![Remove Module](assets/fluttermint4.jpg) | ![Add Platform](assets/fluttermint5.jpg) | ![Remove Platform](assets/fluttermint6.jpg) |
 
 ## Features
 
