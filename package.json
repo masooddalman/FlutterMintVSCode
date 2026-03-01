@@ -2,7 +2,7 @@
   "name": "fluttermint",
   "displayName": "FlutterMint",
   "description": "Visual architecture editor for Flutter projects with MVVM clean architecture",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "publisher": "masoud-dalman",
   "license": "GPL-3.0",
   "repository": {
