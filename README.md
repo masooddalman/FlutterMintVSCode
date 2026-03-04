@@ -2,7 +2,7 @@
 
 ![FlutterMint Banner](assets/banner.png)
 
-A VS Code extension that gives you a full visual interface for scaffolding, managing, and building Flutter projects using clean MVVM architecture.
+A VS Code extension that gives you a full visual interface for scaffolding, managing, and building Flutter projects with multiple architecture patterns.
 
 FlutterMint wraps the [FlutterMint CLI](https://pub.dev/packages/fluttermint) and replaces every terminal prompt with dedicated in-editor wizard panels, so you never have to leave VS Code.
 
@@ -18,8 +18,19 @@ FlutterMint wraps the [FlutterMint CLI](https://pub.dev/packages/fluttermint) an
 
 ## Features
 
+### Design Pattern Selection
+Choose your architecture pattern when creating a project:
+
+| Pattern | State Management | DI Approach |
+|---------|-----------------|-------------|
+| **MVVM** | Provider + ChangeNotifier | GetIt (locator) |
+| **MVI** | BLoC + Equatable | GetIt (locator) |
+| **MVVM + Riverpod** | flutter_riverpod + AsyncNotifier | Riverpod providers |
+
+The selected pattern determines screen generation structure, available modules, and dependency injection strategy. Module availability adapts automatically — for example, Riverpod projects exclude `locator` since Riverpod provides its own DI.
+
 ### Project Scaffolding
-Create a new Flutter project with MVVM clean architecture in a guided wizard. Pick your app name, organization, modules, and platforms - the CLI generates the full project structure.
+Create a new Flutter project in a guided wizard. Pick your design pattern, app name, organization, modules, and platforms — the CLI generates the full project structure.
 
 ### Module Management
 Add, remove, and configure architecture modules through visual panels:
@@ -44,7 +55,7 @@ Modules with dependencies are resolved automatically - adding `ai` will also add
 Configurable modules (`cicd` and `flavors`) open a dedicated configuration wizard after installation.
 
 ### Screen Generator
-Add new screens with typed route parameters. The CLI generates the view, viewmodel, and routing boilerplate.
+Add new screens with typed route parameters. The CLI generates pattern-specific boilerplate — ViewModel for MVVM, BLoC+Events+States for MVI, or Notifier+Providers for Riverpod.
 
 ### Platform Management
 Add or remove target platforms (Android, iOS, Web, macOS, Windows, Linux) through a checkbox wizard.
@@ -53,7 +64,7 @@ Add or remove target platforms (Android, iOS, Web, macOS, Windows, Linux) throug
 Enable or disable cleartext HTTP connections for Android and iOS with a single click.
 
 ### Status Dashboard
-A read-only webview panel showing your project's current state: app name, organization, installed modules, screens, and platforms.
+A read-only webview panel showing your project's current state: app name, organization, design pattern, installed modules, screens, and platforms.
 
 ### Sidebar
 An activity bar panel with quick-access buttons for every command. Displays a live summary of your project config at the bottom, auto-refreshes when `.fluttermint.yaml` changes.
