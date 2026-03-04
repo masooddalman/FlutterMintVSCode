@@ -1,3 +1,19 @@
+export const DESIGN_PATTERNS = [
+  { id: 'mvvm', displayName: 'MVVM', description: 'Provider + ChangeNotifier', cliChoice: '1' },
+  { id: 'mvi', displayName: 'MVI', description: 'BLoC + Equatable', cliChoice: '2' },
+  { id: 'riverpod', displayName: 'MVVM + Riverpod', description: 'flutter_riverpod + AsyncNotifier', cliChoice: '3' },
+];
+
+/** Modules to hide from the selectable list per design pattern */
+export const PATTERN_MODULE_EXCLUSIONS: Record<string, string[]> = {
+  mvvm: [],
+  mvi: [],
+  riverpod: ['locator'],
+};
+
+/** Pattern module IDs that are auto-managed and cannot be removed */
+export const PATTERN_MODULE_IDS = ['mvvm', 'mvi', 'riverpod'];
+
 export const AVAILABLE_MODULES = [
   { label: 'logging', description: 'Logging Service', picked: true },
   { label: 'locator', description: 'Dependency Injection (GetIt)', picked: false },
@@ -30,13 +46,9 @@ export const CONFIGURABLE_MODULES = [
 /** module → modules it depends on (auto-added when adding this module) */
 export const MODULE_DEPENDENCIES: Record<string, string[]> = {
   ai: ['api'],
-  theming: ['mvvm'],
-  testing: ['mvvm'],
-  startup: ['mvvm'],
 };
 
 /** module → modules that depend on it (auto-removed when removing this module) */
 export const MODULE_DEPENDENTS: Record<string, string[]> = {
   api: ['ai'],
-  mvvm: ['theming', 'testing', 'startup'],
 };

@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { getWorkspacePath, loadMintConfig } from '../utils/config';
-import { AVAILABLE_MODULES, MODULE_DEPENDENCIES } from '../utils/constants';
+import { AVAILABLE_MODULES, MODULE_DEPENDENCIES, PATTERN_MODULE_EXCLUSIONS } from '../utils/constants';
 import { SidebarWebviewProvider } from '../views/sidebarWebviewProvider';
 import { AddModulePanel } from '../views/addModulePanel';
 import { AddModuleOption } from '../views/addModuleHtml';
@@ -22,7 +22,10 @@ export function registerAddModuleCommand(
       return;
     }
 
-    const available = AVAILABLE_MODULES.filter(m => !config.modules.includes(m.label));
+    const excluded = PATTERN_MODULE_EXCLUSIONS[config.designPattern] || [];
+    const available = AVAILABLE_MODULES.filter(m =>
+      !config.modules.includes(m.label) && !excluded.includes(m.label)
+    );
     if (available.length === 0) {
       vscode.window.showInformationMessage('All modules are already installed.');
       return;

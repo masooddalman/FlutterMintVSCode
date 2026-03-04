@@ -8,6 +8,7 @@ export interface MintConfig {
   org: string;
   modules: string[];
   platforms: string[];
+  designPattern: string;
 }
 
 export function getWorkspacePath(): string | undefined {
@@ -38,6 +39,7 @@ export function loadMintConfig(projectPath: string): MintConfig | null {
       org: yaml.org || 'com.example',
       modules: yaml.modules || [],
       platforms: yaml.platforms || ['android', 'ios'],
+      designPattern: yaml.design_pattern || 'mvvm',
     };
   } catch {
     return null;

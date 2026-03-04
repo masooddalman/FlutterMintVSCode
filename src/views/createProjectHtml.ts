@@ -1,4 +1,4 @@
-import { AVAILABLE_MODULES } from '../utils/constants';
+import { AVAILABLE_MODULES, DESIGN_PATTERNS, PATTERN_MODULE_EXCLUSIONS } from '../utils/constants';
 
 export function generateCreateProjectHtml(nonce: string): string {
   const defaultModules = AVAILABLE_MODULES.filter(m => m.picked);
@@ -15,6 +15,17 @@ export function generateCreateProjectHtml(nonce: string): string {
         <div class="card-body">
           <span class="card-title">${esc(m.label)}</span>
           <span class="card-desc">${esc(m.description)}</span>
+        </div>
+      </div>`)
+    .join('');
+
+  const patternCards = DESIGN_PATTERNS
+    .map((p, i) => `
+      <div class="pattern-card${i === 0 ? ' selected' : ''}" data-pattern="${esc(p.id)}">
+        <input type="radio" name="pattern" value="${esc(p.id)}"${i === 0 ? ' checked' : ''}>
+        <div class="card-body">
+          <span class="card-title">${esc(p.displayName)}</span>
+          <span class="card-desc">${esc(p.description)}</span>
         </div>
       </div>`)
     .join('');
@@ -241,6 +252,39 @@ export function generateCreateProjectHtml(nonce: string): string {
     .card-title { display: block; font-weight: 600; font-size: 13px; }
     .card-desc { display: block; font-size: 11px; color: var(--vscode-descriptionForeground); margin-top: 2px; }
 
+    /* --- Pattern Grid --- */
+    .pattern-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .pattern-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 6px;
+      border: 1px solid var(--vscode-input-border, rgba(128,128,128,0.3));
+      background: var(--vscode-input-background);
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      user-select: none;
+    }
+
+    .pattern-card:hover { border-color: var(--vscode-focusBorder); }
+
+    .pattern-card.selected {
+      border-color: var(--vscode-focusBorder);
+      background: color-mix(in srgb, var(--vscode-focusBorder) 12%, var(--vscode-input-background));
+    }
+
+    .pattern-card input[type="radio"] {
+      margin-top: 2px;
+      flex-shrink: 0;
+      accent-color: var(--vscode-button-background);
+    }
+
     /* --- Flavors: Env Sections --- */
     .env-sections { margin-top: 16px; }
 
@@ -405,6 +449,21 @@ export function generateCreateProjectHtml(nonce: string): string {
       <div class="actions">
         <button type="button" class="btn btn-secondary" id="quickCreateBtn">Create Project</button>
         <button type="button" class="btn btn-primary" id="nextToModulesBtn">Next</button>
+      </div>
+    </div>
+
+    <!-- STEP: Design Pattern -->
+    <div class="step" id="step-pattern">
+      <h2 class="wizard-title">Choose Design Pattern</h2>
+      <div class="field-hint" style="margin-bottom:16px;">
+        This determines the architecture and state management approach for your project.
+      </div>
+      <div class="pattern-grid">
+        ${patternCards}
+      </div>
+      <div class="actions">
+        <button type="button" class="btn btn-secondary" id="patternBackBtn">Back</button>
+        <button type="button" class="btn btn-primary" id="patternNextBtn">Next</button>
       </div>
     </div>
 
@@ -584,9 +643,11 @@ export function generateCreateProjectHtml(nonce: string): string {
     // ========================================
     // Dynamic step sequence
     // ========================================
-    const ALL_STEPS = ['info', 'modules', 'flavors', 'cicd', 'progress', 'finish'];
-    let stepSeq = ['info', 'modules', 'progress', 'finish'];
+    const ALL_STEPS = ['info', 'pattern', 'modules', 'flavors', 'cicd', 'progress', 'finish'];
+    let stepSeq = ['info', 'pattern', 'modules', 'progress', 'finish'];
     let currentIdx = 0;
+    let selectedPattern = 'mvvm';
+    const PATTERN_EXCLUSIONS = ${JSON.stringify(PATTERN_MODULE_EXCLUSIONS)};
 
     function isFlavorsSelected() {
       const cb = document.querySelector('.module-card[data-module="flavors"] input');
@@ -599,7 +660,7 @@ export function generateCreateProjectHtml(nonce: string): string {
     }
 
     function rebuildStepSeq() {
-      const seq = ['info', 'modules'];
+      const seq = ['info', 'pattern', 'modules'];
       if (isFlavorsSelected()) seq.push('flavors');
       if (isCicdSelected()) seq.push('cicd');
       seq.push('progress', 'finish');
@@ -715,15 +776,64 @@ export function generateCreateProjectHtml(nonce: string): string {
       });
     });
 
-    // Next → Modules
+    // Next → Pattern
     document.getElementById('nextToModulesBtn').addEventListener('click', () => {
       if (!validateStep1()) return;
       rebuildStepSeq();
+      goToStep('pattern');
+    });
+
+    // ========================================
+    // Step: Design Pattern
+    // ========================================
+    document.querySelectorAll('.pattern-card').forEach(card => {
+      const radio = card.querySelector('input[type="radio"]');
+      card.addEventListener('click', (e) => {
+        if (e.target === radio) return;
+        document.querySelectorAll('.pattern-card').forEach(c => {
+          c.classList.remove('selected');
+          c.querySelector('input[type="radio"]').checked = false;
+        });
+        radio.checked = true;
+        card.classList.add('selected');
+        selectedPattern = radio.value;
+        filterModulesByPattern();
+      });
+      radio.addEventListener('change', () => {
+        document.querySelectorAll('.pattern-card').forEach(c => {
+          c.classList.toggle('selected', c.querySelector('input[type="radio"]').checked);
+        });
+        if (radio.checked) {
+          selectedPattern = radio.value;
+          filterModulesByPattern();
+        }
+      });
+    });
+
+    function filterModulesByPattern() {
+      const excluded = PATTERN_EXCLUSIONS[selectedPattern] || [];
+      document.querySelectorAll('.module-card').forEach(card => {
+        const mod = card.getAttribute('data-module');
+        if (excluded.includes(mod)) {
+          card.style.display = 'none';
+          const cb = card.querySelector('input[type="checkbox"]');
+          if (cb) { cb.checked = false; card.classList.remove('selected'); }
+        } else {
+          card.style.display = '';
+        }
+      });
+      rebuildStepSeq();
+      updateModulesNextLabel();
+    }
+
+    document.getElementById('patternBackBtn').addEventListener('click', () => goToStep('info'));
+    document.getElementById('patternNextBtn').addEventListener('click', () => {
+      filterModulesByPattern();
       goToStep('modules');
     });
 
     // ========================================
-    // Step 2: Module cards
+    // Step: Module cards
     // ========================================
     document.querySelectorAll('.module-card').forEach(card => {
       const cb = card.querySelector('input[type="checkbox"]');
@@ -746,7 +856,7 @@ export function generateCreateProjectHtml(nonce: string): string {
       btn.textContent = (isFlavorsSelected() || isCicdSelected()) ? 'Next' : 'Create';
     }
 
-    document.getElementById('backToInfoBtn').addEventListener('click', () => goToStep('info'));
+    document.getElementById('backToInfoBtn').addEventListener('click', () => goToStep('pattern'));
 
     // Modules Next/Create button
     document.getElementById('modulesNextBtn').addEventListener('click', () => {
@@ -921,6 +1031,7 @@ export function generateCreateProjectHtml(nonce: string): string {
         org: document.getElementById('orgName').value.trim(),
         targetDir: document.getElementById('targetDir').value.trim(),
         modules: selected,
+        designPattern: selectedPattern,
       };
 
       if (isFlavorsSelected()) {

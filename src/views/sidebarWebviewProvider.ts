@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { getWorkspacePath, loadMintConfig, getScreenNames } from '../utils/config';
-import { CONFIGURABLE_MODULES } from '../utils/constants';
+import { CONFIGURABLE_MODULES, DESIGN_PATTERNS } from '../utils/constants';
 
 export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = 'fluttermint.sidebarView';
@@ -273,6 +273,8 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
     }
 
     const screens = getScreenNames(workspacePath);
+    const patternInfo = DESIGN_PATTERNS.find(p => p.id === config.designPattern);
+    const patternLabel = patternInfo ? patternInfo.displayName : config.designPattern;
     const moduleTags = config.modules.map(m => `<span class="tag">${m}</span>`).join(' ');
     const screenTags = screens.length > 0
       ? screens.map(s => `<span class="tag">${s}</span>`).join(' ')
@@ -284,6 +286,8 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
       <div class="value"><strong>${config.appName}</strong></div>
       <div class="label">Organization</div>
       <div class="value">${config.org}</div>
+      <div class="label">Design Pattern</div>
+      <div class="value"><span class="tag">${patternLabel}</span></div>
       <div class="label">Modules (${config.modules.length})</div>
       <div class="value">${moduleTags}</div>
       <div class="label">Screens (${screens.length})</div>

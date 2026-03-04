@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { loadMintConfig, getScreenNames } from '../utils/config';
-import { AVAILABLE_MODULES, AVAILABLE_PLATFORMS, MODULE_DEPENDENCIES } from '../utils/constants';
+import { AVAILABLE_MODULES, AVAILABLE_PLATFORMS, MODULE_DEPENDENCIES, DESIGN_PATTERNS } from '../utils/constants';
 
 export class StatusPanel {
   static show(projectPath: string): void {
@@ -31,6 +31,7 @@ export class StatusPanel {
       nonce,
       config.appName,
       config.org,
+      config.designPattern,
       installedModules,
       availableModules,
       enabledPlatforms,
@@ -48,6 +49,7 @@ function buildHtml(
   nonce: string,
   appName: string,
   org: string,
+  designPattern: string,
   installedModules: { label: string; description: string }[],
   availableModules: { label: string; description: string }[],
   enabledPlatforms: { label: string; description: string }[],
@@ -226,6 +228,10 @@ function buildHtml(
     <div class="project-header">
       <div class="project-name">${esc(appName)}</div>
       <div class="project-org">${esc(org)}</div>
+      <div style="margin-top:8px;">
+        <span class="tag installed">${esc((DESIGN_PATTERNS.find(p => p.id === designPattern) || { displayName: designPattern }).displayName)}</span>
+        <span class="muted" style="margin-left:6px;">${esc((DESIGN_PATTERNS.find(p => p.id === designPattern) || { description: '' }).description)}</span>
+      </div>
     </div>
 
     <div class="section">

@@ -3,7 +3,7 @@ import { spawn, ChildProcess } from 'child_process';
 import * as path from 'path';
 import { generateCreateProjectHtml } from './createProjectHtml';
 import { SidebarWebviewProvider } from './sidebarWebviewProvider';
-import { AVAILABLE_MODULES } from '../utils/constants';
+import { AVAILABLE_MODULES, DESIGN_PATTERNS, PATTERN_MODULE_EXCLUSIONS } from '../utils/constants';
 
 /** Order of optional modules the CLI asks about interactively (must match CLI's ModuleRegistry.optionalModules) */
 const OPTIONAL_MODULE_ORDER = AVAILABLE_MODULES
@@ -99,7 +99,8 @@ export class CreateProjectPanel {
         const modules = msg.modules as string[];
         const flavorsConfig = msg.flavorsConfig as FlavorsConfig | undefined;
         this.cicdConfig = msg.cicdConfig as CicdConfig | undefined;
-        this.runFullCreate(this.projectName, org, modules, this.targetDir, flavorsConfig);
+        const designPattern = msg.designPattern as string || 'mvvm';
+        this.runFullCreate(this.projectName, org, modules, this.targetDir, flavorsConfig, designPattern);
         break;
       }
 
@@ -131,6 +132,7 @@ export class CreateProjectPanel {
     selectedModules: string[],
     targetDir: string,
     flavorsConfig?: FlavorsConfig,
+    designPattern?: string,
   ): void {
     const entryPoint = this.getEntryPoint();
     const args = ['run', entryPoint, 'create'];
@@ -145,11 +147,16 @@ export class CreateProjectPanel {
     answers.push(name);
     // 2. Organization
     answers.push(org);
-    // 3. For each optional module in order: y or n
+    // 3. Design pattern choice (1, 2, or 3)
+    const pattern = DESIGN_PATTERNS.find(p => p.id === (designPattern || 'mvvm'));
+    answers.push(pattern?.cliChoice || '1');
+    // 4. For each optional module in order: y or n (skip pattern-excluded modules)
+    const excluded = PATTERN_MODULE_EXCLUSIONS[designPattern || 'mvvm'] || [];
     for (const moduleId of OPTIONAL_MODULE_ORDER) {
+      if (excluded.includes(moduleId)) { continue; }
       answers.push(selectedModules.includes(moduleId) ? 'y' : 'n');
     }
-    // 4. Optional platforms: n for all (web, windows, macos, linux)
+    // 5. Optional platforms: n for all (web, windows, macos, linux)
     answers.push('n', 'n', 'n', 'n');
 
     // 5. Flavors config (if flavors selected — CLI asks inline after platforms)

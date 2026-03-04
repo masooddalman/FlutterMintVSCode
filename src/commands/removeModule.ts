@@ -5,7 +5,10 @@ import { SidebarWebviewProvider } from '../views/sidebarWebviewProvider';
 import { RemoveModulePanel } from '../views/removeModulePanel';
 import { RemoveModuleOption } from '../views/removeModuleHtml';
 
-const DEFAULT_MODULES = ['mvvm', 'logging'];
+/** Pattern module + logging are non-removable */
+function getDefaultModules(designPattern: string): string[] {
+  return [designPattern, 'logging'];
+}
 
 export function registerRemoveModuleCommand(
   context: vscode.ExtensionContext,
@@ -24,9 +27,10 @@ export function registerRemoveModuleCommand(
       return;
     }
 
-    const removable = config.modules.filter(m => !DEFAULT_MODULES.includes(m));
+    const defaultModules = getDefaultModules(config.designPattern);
+    const removable = config.modules.filter(m => !defaultModules.includes(m));
     if (removable.length === 0) {
-      vscode.window.showInformationMessage('No removable modules. Default modules (mvvm, logging) cannot be removed.');
+      vscode.window.showInformationMessage(`No removable modules. Default modules (${config.designPattern}, logging) cannot be removed.`);
       return;
     }
 
