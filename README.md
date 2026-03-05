@@ -42,6 +42,7 @@ Add, remove, and configure architecture modules through visual panels:
 | theming | Theme Management |
 | routing | Routing (GoRouter) |
 | api | API Requests & Interceptors (Dio) |
+| preferences | Local Preferences (SharedPreferences) |
 | ai | AI Service |
 | localization | Multi-language Support |
 | startup | Startup Service |
@@ -53,6 +54,9 @@ Add, remove, and configure architecture modules through visual panels:
 Modules with dependencies are resolved automatically - adding `ai` will also add `api`, removing `api` will also remove `ai`, etc.
 
 Configurable modules (`cicd` and `flavors`) open a dedicated configuration wizard after installation.
+
+### Preferences
+When the `preferences` module is installed, use **Add Preference** to generate typed getter/setter accessors for SharedPreferences. Pick a name (camelCase) and a type (String, int, double, bool, List\<String\>) — the CLI generates the accessor code in your preferences service.
 
 ### Screen Generator
 Add new screens with typed route parameters. The CLI generates pattern-specific boilerplate — ViewModel for MVVM, BLoC+Events+States for MVI, or Notifier+Providers for Riverpod.
@@ -102,6 +106,7 @@ All commands are available from the Command Palette (`Ctrl+Shift+P` / `Cmd+Shift
 | `FlutterMint: Add Platform` | Enable a target platform |
 | `FlutterMint: Remove Platform` | Disable a target platform |
 | `FlutterMint: Toggle HTTP` | Enable/disable cleartext HTTP |
+| `FlutterMint: Add Preference` | Add a typed preference accessor |
 | `FlutterMint: Show Status` | Open the project status dashboard |
 | `FlutterMint: Run` | Run the Flutter project |
 | `FlutterMint: Build` | Build the Flutter project |
