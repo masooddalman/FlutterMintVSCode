@@ -50,12 +50,21 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
     return CONFIGURABLE_MODULES.some(m => config.modules.includes(m.label));
   }
 
+  private _hasPreferencesModule(): boolean {
+    const workspacePath = getWorkspacePath();
+    if (!workspacePath) { return false; }
+    const config = loadMintConfig(workspacePath);
+    if (!config) { return false; }
+    return config.modules.includes('preferences');
+  }
+
   private _getHtmlContent(): string {
     const nonce = this._getNonce();
     const projectInfoHtml = this._buildProjectInfoHtml();
     const hasProject = this._hasProject();
     const d = hasProject ? '' : ' disabled';
     const dc = hasProject && this._hasConfigurableModule() ? '' : ' disabled';
+    const dp = hasProject && this._hasPreferencesModule() ? '' : ' disabled';
 
     return `<!DOCTYPE html>
 <html lang="en">
@@ -206,6 +215,15 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
     <div class="btn-grid single" style="margin-top:4px;">
       <button class="menu-btn" data-cmd="fluttermint.configModule"${dc}>
         <span class="icon">&#9881;</span> Configure
+      </button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">Preferences</div>
+    <div class="btn-grid single">
+      <button class="menu-btn" data-cmd="fluttermint.addPreference"${dp}>
+        <span class="icon">+</span> Add Pref
       </button>
     </div>
   </div>

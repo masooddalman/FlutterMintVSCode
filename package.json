@@ -69,6 +69,10 @@
       {
         "command": "fluttermint.toggleHttp",
         "title": "FlutterMint: Toggle HTTP"
+      },
+      {
+        "command": "fluttermint.addPreference",
+        "title": "FlutterMint: Add Preference"
       }
     ],
     "viewsContainers": {

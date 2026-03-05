@@ -12,6 +12,7 @@ import { registerBuildCommand } from './commands/build';
 import { registerAddPlatformCommand } from './commands/addPlatform';
 import { registerRemovePlatformCommand } from './commands/removePlatform';
 import { registerToggleHttpCommand } from './commands/toggleHttp';
+import { registerAddPreferenceCommand } from './commands/addPreference';
 
 export function activate(context: vscode.ExtensionContext) {
   console.log('FlutterMint extension activated');
@@ -38,6 +39,7 @@ export function activate(context: vscode.ExtensionContext) {
   registerAddPlatformCommand(context, sidebarProvider);
   registerRemovePlatformCommand(context, sidebarProvider);
   registerToggleHttpCommand(context);
+  registerAddPreferenceCommand(context, sidebarProvider);
 
   // Watch for .fluttermint.yaml changes to refresh sidebar
   const watcher = vscode.workspace.createFileSystemWatcher('**/.fluttermint.yaml');
