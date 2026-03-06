@@ -43,6 +43,7 @@ Add, remove, and configure architecture modules through visual panels:
 | routing | Routing (GoRouter) |
 | api | API Requests & Interceptors (Dio) |
 | preferences | Local Preferences (SharedPreferences) |
+| database | Local Database (sqflite) |
 | ai | AI Service |
 | localization | Multi-language Support |
 | startup | Startup Service |
@@ -57,6 +58,9 @@ Configurable modules (`cicd` and `flavors`) open a dedicated configuration wizar
 
 ### Preferences
 When the `preferences` module is installed, use **Add Preference** to generate typed getter/setter accessors for SharedPreferences. Pick a name (camelCase) and a type (String, int, double, bool, List\<String\>) — the CLI generates the accessor code in your preferences service.
+
+### Database
+When the `database` module is installed, manage SQLite tables through wizard panels. **Add Table** lets you define a table name and columns with type dropdowns (String, int, double, bool, DateTime) — the CLI generates the model class and CRUD methods. **Remove Table** scans your project for existing tables and displays them with their column definitions for easy selection.
 
 ### Screen Generator
 Add new screens with typed route parameters. The CLI generates pattern-specific boilerplate — ViewModel for MVVM, BLoC+Events+States for MVI, or Notifier+Providers for Riverpod.
@@ -107,6 +111,8 @@ All commands are available from the Command Palette (`Ctrl+Shift+P` / `Cmd+Shift
 | `FlutterMint: Remove Platform` | Disable a target platform |
 | `FlutterMint: Toggle HTTP` | Enable/disable cleartext HTTP |
 | `FlutterMint: Add Preference` | Add a typed preference accessor |
+| `FlutterMint: Add Database Table` | Add a table with model and CRUD methods |
+| `FlutterMint: Remove Database Table` | Remove an existing database table |
 | `FlutterMint: Show Status` | Open the project status dashboard |
 | `FlutterMint: Run` | Run the Flutter project |
 | `FlutterMint: Build` | Build the Flutter project |
