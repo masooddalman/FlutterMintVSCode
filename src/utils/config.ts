@@ -46,6 +46,43 @@ export function loadMintConfig(projectPath: string): MintConfig | null {
   }
 }
 
+export interface DbTableInfo {
+  name: string;
+  columns: Array<{ name: string; type: string }>;
+}
+
+const SQL_TO_DART: Record<string, string> = {
+  'TEXT': 'String',
+  'INTEGER': 'int',
+  'REAL': 'double',
+};
+
+export function getDbTables(projectPath: string): DbTableInfo[] {
+  const dbPath = path.join(projectPath, 'lib', 'core', 'database', 'database_service.dart');
+  if (!fs.existsSync(dbPath)) { return []; }
+
+  try {
+    const content = fs.readFileSync(dbPath, 'utf-8');
+    const tables: DbTableInfo[] = [];
+    const regex = /CREATE TABLE (\w+)\(id INTEGER PRIMARY KEY AUTOINCREMENT,\s*([^)]+)\)/g;
+    let match;
+
+    while ((match = regex.exec(content)) !== null) {
+      const tableName = match[1];
+      const colDefs = match[2].split(',').map(c => c.trim()).filter(Boolean);
+      const columns = colDefs.map(col => {
+        const parts = col.split(/\s+/);
+        return { name: parts[0], type: SQL_TO_DART[parts[1]] || parts[1] };
+      });
+      tables.push({ name: tableName, columns });
+    }
+
+    return tables;
+  } catch {
+    return [];
+  }
+}
+
 export function getScreenNames(projectPath: string): string[] {
   const featuresDir = path.join(projectPath, 'lib', 'features');
 

@@ -50,6 +50,16 @@ export interface KeyValueListField {
   valuePlaceholder?: string;
 }
 
+/** Dynamic key + dropdown pair rows */
+export interface KeySelectListField {
+  type: 'key-select-list';
+  id: string;
+  label: string;
+  required?: boolean;
+  keyPlaceholder?: string;
+  selectOptions: Array<{ value: string; label: string }>;
+}
+
 /** Directory picker — text input + Browse button */
 export interface DirectoryField {
   type: 'directory';
@@ -65,6 +75,7 @@ export type WizardField =
   | CheckboxGridField
   | RadioGridField
   | KeyValueListField
+  | KeySelectListField
   | DirectoryField;
 
 export interface WizardConfig {

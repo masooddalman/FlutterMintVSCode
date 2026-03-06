@@ -58,6 +58,14 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
     return config.modules.includes('preferences');
   }
 
+  private _hasDatabaseModule(): boolean {
+    const workspacePath = getWorkspacePath();
+    if (!workspacePath) { return false; }
+    const config = loadMintConfig(workspacePath);
+    if (!config) { return false; }
+    return config.modules.includes('database');
+  }
+
   private _getHtmlContent(): string {
     const nonce = this._getNonce();
     const projectInfoHtml = this._buildProjectInfoHtml();
@@ -65,6 +73,7 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
     const d = hasProject ? '' : ' disabled';
     const dc = hasProject && this._hasConfigurableModule() ? '' : ' disabled';
     const dp = hasProject && this._hasPreferencesModule() ? '' : ' disabled';
+    const dd = hasProject && this._hasDatabaseModule() ? '' : ' disabled';
 
     return `<!DOCTYPE html>
 <html lang="en">
@@ -224,6 +233,18 @@ export class SidebarWebviewProvider implements vscode.WebviewViewProvider {
     <div class="btn-grid single">
       <button class="menu-btn" data-cmd="fluttermint.addPreference"${dp}>
         <span class="icon">+</span> Add Pref
+      </button>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header">Database</div>
+    <div class="btn-grid">
+      <button class="menu-btn" data-cmd="fluttermint.addDbTable"${dd}>
+        <span class="icon">+</span> Add Table
+      </button>
+      <button class="menu-btn" data-cmd="fluttermint.removeDbTable"${dd}>
+        <span class="icon">&minus;</span> Remove
       </button>
     </div>
   </div>

@@ -21,6 +21,7 @@ export const AVAILABLE_MODULES = [
   { label: 'routing', description: 'Routing (GoRouter)', picked: false },
   { label: 'api', description: 'API Requests & Interceptors (Dio)', picked: false },
   { label: 'preferences', description: 'Local Preferences (SharedPreferences)', picked: false },
+  { label: 'database', description: 'Local Database (sqflite)', picked: false },
   { label: 'ai', description: 'AI Service', picked: false },
   { label: 'localization', description: 'Multi-language Support', picked: false },
   { label: 'startup', description: 'Startup Service', picked: false },

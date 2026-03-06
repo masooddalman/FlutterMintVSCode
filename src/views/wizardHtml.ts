@@ -210,6 +210,23 @@ export function generateWizardHtml(config: WizardConfig): string {
       color: var(--vscode-editor-foreground);
     }
 
+    /* --- Key-Select List --- */
+    .kv-row select {
+      flex: 0 0 130px;
+      padding: 8px 10px;
+      border: 1px solid var(--vscode-input-border, rgba(128,128,128,0.4));
+      border-radius: 4px;
+      background: var(--vscode-input-background);
+      color: var(--vscode-input-foreground);
+      font-family: var(--vscode-font-family);
+      font-size: 13px;
+      outline: none;
+    }
+
+    .kv-row select:focus {
+      border-color: var(--vscode-focusBorder);
+    }
+
     /* --- Directory Field --- */
     .directory-row {
       display: flex;
@@ -362,13 +379,19 @@ export function generateWizardHtml(config: WizardConfig): string {
         const list = document.getElementById(listId);
         const keyPh = btn.getAttribute('data-key-ph') || 'key';
         const valPh = btn.getAttribute('data-value-ph') || 'value';
+        const selectOpts = btn.getAttribute('data-select-opts') || '';
 
         const row = document.createElement('div');
         row.className = 'kv-row';
+
+        const valuePart = selectOpts
+          ? '<select class="kv-value">' + selectOpts + '</select>'
+          : '<input type="text" class="text-input kv-value" placeholder="' + valPh + '">';
+
         row.innerHTML =
           '<input type="text" class="text-input kv-key" placeholder="' + keyPh + '">' +
           '<span class="kv-sep">:</span>' +
-          '<input type="text" class="text-input kv-value" placeholder="' + valPh + '">' +
+          valuePart +
           '<button type="button" class="kv-remove" title="Remove">\\u00d7</button>';
 
         row.querySelector('.kv-remove').addEventListener('click', () => row.remove());
@@ -451,7 +474,8 @@ export function generateWizardHtml(config: WizardConfig): string {
             data[id] = checked ? checked.value : null;
             break;
           }
-          case 'key-value-list': {
+          case 'key-value-list':
+          case 'key-select-list': {
             const rows = field.querySelectorAll('.kv-row');
             data[id] = Array.from(rows)
               .map(row => ({
@@ -548,6 +572,21 @@ function renderField(field: WizardField): string {
     data-value-ph="${escapeAttr(field.valuePlaceholder || 'value')}">+ Add</button>
   <span class="field-error" id="error-${field.id}"></span>
 </div>`;
+
+    case 'key-select-list': {
+      const selectOpts = field.selectOptions.map(o =>
+        `<option value="${escapeAttr(o.value)}">${escapeHtml(o.label)}</option>`
+      ).join('');
+      return `<div class="field" data-type="key-select-list" data-id="${field.id}" data-required="${!!field.required}">
+  <label class="field-label">${escapeHtml(field.label)}${reqStar}</label>
+  <div class="kv-list" id="kv-${field.id}"></div>
+  <button type="button" class="kv-add-btn"
+    data-target="kv-${field.id}"
+    data-key-ph="${escapeAttr(field.keyPlaceholder || 'name')}"
+    data-select-opts='${escapeAttr(selectOpts)}'>+ Add</button>
+  <span class="field-error" id="error-${field.id}"></span>
+</div>`;
+    }
 
     case 'directory':
       return `<div class="field" data-type="directory" data-id="${field.id}" data-required="${!!field.required}">

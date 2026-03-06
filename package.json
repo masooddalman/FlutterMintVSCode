@@ -2,7 +2,7 @@
   "name": "fluttermint",
   "displayName": "FlutterMint",
   "description": "Visual interface for scaffolding and managing Flutter projects with MVVM, MVI+BLoC, or MVVM+Riverpod architecture",
-  "version": "0.2.1",
+  "version": "0.3.1",
   "publisher": "masoud-dalman",
   "license": "GPL-3.0",
   "repository": {
@@ -73,6 +73,14 @@
       {
         "command": "fluttermint.addPreference",
         "title": "FlutterMint: Add Preference"
+      },
+      {
+        "command": "fluttermint.addDbTable",
+        "title": "FlutterMint: Add Database Table"
+      },
+      {
+        "command": "fluttermint.removeDbTable",
+        "title": "FlutterMint: Remove Database Table"
       }
     ],
     "viewsContainers": {
